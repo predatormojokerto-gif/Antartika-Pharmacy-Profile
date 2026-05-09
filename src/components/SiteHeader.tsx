@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Pill, ShoppingCart } from "lucide-react";
+import { Pill, ShoppingCart, Menu } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const nav = [
   { to: "/", label: "Beranda" },
@@ -24,6 +25,7 @@ export function SiteHeader() {
   const navigate = useNavigate();
   const [count, setCount] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -53,7 +55,7 @@ export function SiteHeader() {
             Apotek <span className="text-primary">Antartika</span>
           </span>
         </Link>
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {nav.map((n) => (
             <Link
               key={n.to}
@@ -65,7 +67,7 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <div className="hidden items-center gap-2 md:flex">
+        <div className="hidden items-center gap-2 lg:flex">
           <button
             type="button"
             onClick={openCart}
@@ -97,6 +99,72 @@ export function SiteHeader() {
           >
             Hubungi Kami
           </a>
+        </div>
+        
+        {/* Mobile Navigation */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <button
+            type="button"
+            onClick={openCart}
+            aria-label="Keranjang belanja"
+            className="relative inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background hover:bg-accent"
+          >
+            <ShoppingCart className="h-4 w-4" />
+            {mounted && count > 0 && (
+              <span className="absolute -right-1.5 -top-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                {count}
+              </span>
+            )}
+          </button>
+          
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <button className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background hover:bg-accent">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle Menu</span>
+              </button>
+            </SheetTrigger>
+            <SheetContent side="right" className="flex flex-col w-[300px] sm:w-[400px]">
+              <SheetHeader className="pb-4 border-b text-left">
+                <SheetTitle className="flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[image:var(--gradient-hero)] text-primary-foreground">
+                    <Pill className="h-4 w-4" />
+                  </span>
+                  Apotek Antartika
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="flex flex-col gap-2 mt-4">
+                {nav.map((n) => (
+                  <Link
+                    key={n.to}
+                    to={n.to}
+                    className="rounded-md px-4 py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                    activeProps={{ className: "text-primary bg-accent font-semibold" }}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {n.label}
+                  </Link>
+                ))}
+              </nav>
+              <div className="mt-auto flex flex-col gap-3 pb-4">
+                <Link
+                  to="/auth"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-md border border-input bg-background px-4 py-3 text-center text-sm font-medium hover:bg-accent"
+                >
+                  Login Admin
+                </Link>
+                <a
+                  href="https://wa.me/6287842224813"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-md bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90"
+                >
+                  Hubungi Kami
+                </a>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>
