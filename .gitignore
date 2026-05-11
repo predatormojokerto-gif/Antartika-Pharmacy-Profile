@@ -19,6 +19,10 @@ dist-ssr
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
+supabase/.temp/
+
+# Local scratch files
+scratch_check_*.cjs
 
 # Editor directories and files
 .vscode/*

@@ -61,7 +61,7 @@ const products: Product[] = [
   },
   {
     name: "Vitamin C 1000mg",
-    category: "Suplemen",
+    category: "Vitamin & Suplemen",
     price: "Rp 75.000",
     image: vitaminC,
     badge: "Populer",
@@ -141,7 +141,7 @@ const products: Product[] = [
   },
   {
     name: "Perlengkapan Bayi",
-    category: "Ibu & Anak",
+    category: "Perawatan Bayi",
     price: "Rp 65.000",
     image: babyCare,
     description:
@@ -180,7 +180,7 @@ const products: Product[] = [
   },
   {
     name: "Multivitamin Keluarga",
-    category: "Suplemen",
+    category: "Vitamin & Suplemen",
     price: "Rp 95.000",
     image: multivitamin,
     badge: "Baru",

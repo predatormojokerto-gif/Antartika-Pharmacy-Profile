@@ -17,11 +17,28 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminStokRouteImport } from './routes/admin.stok'
 import { Route as AdminProfilRouteImport } from './routes/admin.profil'
 import { Route as AdminProdukListRouteImport } from './routes/admin.produk-list'
 import { Route as AdminProdukRouteImport } from './routes/admin.produk'
 import { Route as AdminPesanRouteImport } from './routes/admin.pesan'
 import { Route as AdminLayananRouteImport } from './routes/admin.layanan'
+import { Route as AdminStokIndexRouteImport } from './routes/admin.stok.index'
+import { Route as AdminStokTambahRouteImport } from './routes/admin.stok.tambah'
+import { Route as AdminStokSupplierRouteImport } from './routes/admin.stok.supplier'
+import { Route as AdminStokSemuaRouteImport } from './routes/admin.stok.semua'
+import { Route as AdminStokPenyesuaianRouteImport } from './routes/admin.stok.penyesuaian'
+import { Route as AdminStokOpnameRouteImport } from './routes/admin.stok.opname'
+import { Route as AdminStokMenipisRouteImport } from './routes/admin.stok.menipis'
+import { Route as AdminStokMasukRouteImport } from './routes/admin.stok.masuk'
+import { Route as AdminStokLaporanRouteImport } from './routes/admin.stok.laporan'
+import { Route as AdminStokKeluarRouteImport } from './routes/admin.stok.keluar'
+import { Route as AdminStokKategoriRouteImport } from './routes/admin.stok.kategori'
+import { Route as AdminStokHampirExpiredRouteImport } from './routes/admin.stok.hampir-expired'
+import { Route as AdminStokHabisRouteImport } from './routes/admin.stok.habis'
+import { Route as AdminStokExpiredRouteImport } from './routes/admin.stok.expired'
+import { Route as AdminStokBatchRouteImport } from './routes/admin.stok.batch'
+import { Route as AdminStokAmanRouteImport } from './routes/admin.stok.aman'
 
 const TentangRoute = TentangRouteImport.update({
   id: '/tentang',
@@ -63,6 +80,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminStokRoute = AdminStokRouteImport.update({
+  id: '/stok',
+  path: '/stok',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminProfilRoute = AdminProfilRouteImport.update({
   id: '/profil',
   path: '/profil',
@@ -88,6 +110,86 @@ const AdminLayananRoute = AdminLayananRouteImport.update({
   path: '/layanan',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminStokIndexRoute = AdminStokIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokTambahRoute = AdminStokTambahRouteImport.update({
+  id: '/tambah',
+  path: '/tambah',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokSupplierRoute = AdminStokSupplierRouteImport.update({
+  id: '/supplier',
+  path: '/supplier',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokSemuaRoute = AdminStokSemuaRouteImport.update({
+  id: '/semua',
+  path: '/semua',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokPenyesuaianRoute = AdminStokPenyesuaianRouteImport.update({
+  id: '/penyesuaian',
+  path: '/penyesuaian',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokOpnameRoute = AdminStokOpnameRouteImport.update({
+  id: '/opname',
+  path: '/opname',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokMenipisRoute = AdminStokMenipisRouteImport.update({
+  id: '/menipis',
+  path: '/menipis',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokMasukRoute = AdminStokMasukRouteImport.update({
+  id: '/masuk',
+  path: '/masuk',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokLaporanRoute = AdminStokLaporanRouteImport.update({
+  id: '/laporan',
+  path: '/laporan',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokKeluarRoute = AdminStokKeluarRouteImport.update({
+  id: '/keluar',
+  path: '/keluar',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokKategoriRoute = AdminStokKategoriRouteImport.update({
+  id: '/kategori',
+  path: '/kategori',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokHampirExpiredRoute = AdminStokHampirExpiredRouteImport.update({
+  id: '/hampir-expired',
+  path: '/hampir-expired',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokHabisRoute = AdminStokHabisRouteImport.update({
+  id: '/habis',
+  path: '/habis',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokExpiredRoute = AdminStokExpiredRouteImport.update({
+  id: '/expired',
+  path: '/expired',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokBatchRoute = AdminStokBatchRouteImport.update({
+  id: '/batch',
+  path: '/batch',
+  getParentRoute: () => AdminStokRoute,
+} as any)
+const AdminStokAmanRoute = AdminStokAmanRouteImport.update({
+  id: '/aman',
+  path: '/aman',
+  getParentRoute: () => AdminStokRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -102,7 +204,24 @@ export interface FileRoutesByFullPath {
   '/admin/produk': typeof AdminProdukRoute
   '/admin/produk-list': typeof AdminProdukListRoute
   '/admin/profil': typeof AdminProfilRoute
+  '/admin/stok': typeof AdminStokRouteWithChildren
   '/admin/': typeof AdminIndexRoute
+  '/admin/stok/aman': typeof AdminStokAmanRoute
+  '/admin/stok/batch': typeof AdminStokBatchRoute
+  '/admin/stok/expired': typeof AdminStokExpiredRoute
+  '/admin/stok/habis': typeof AdminStokHabisRoute
+  '/admin/stok/hampir-expired': typeof AdminStokHampirExpiredRoute
+  '/admin/stok/kategori': typeof AdminStokKategoriRoute
+  '/admin/stok/keluar': typeof AdminStokKeluarRoute
+  '/admin/stok/laporan': typeof AdminStokLaporanRoute
+  '/admin/stok/masuk': typeof AdminStokMasukRoute
+  '/admin/stok/menipis': typeof AdminStokMenipisRoute
+  '/admin/stok/opname': typeof AdminStokOpnameRoute
+  '/admin/stok/penyesuaian': typeof AdminStokPenyesuaianRoute
+  '/admin/stok/semua': typeof AdminStokSemuaRoute
+  '/admin/stok/supplier': typeof AdminStokSupplierRoute
+  '/admin/stok/tambah': typeof AdminStokTambahRoute
+  '/admin/stok/': typeof AdminStokIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -117,6 +236,22 @@ export interface FileRoutesByTo {
   '/admin/produk-list': typeof AdminProdukListRoute
   '/admin/profil': typeof AdminProfilRoute
   '/admin': typeof AdminIndexRoute
+  '/admin/stok/aman': typeof AdminStokAmanRoute
+  '/admin/stok/batch': typeof AdminStokBatchRoute
+  '/admin/stok/expired': typeof AdminStokExpiredRoute
+  '/admin/stok/habis': typeof AdminStokHabisRoute
+  '/admin/stok/hampir-expired': typeof AdminStokHampirExpiredRoute
+  '/admin/stok/kategori': typeof AdminStokKategoriRoute
+  '/admin/stok/keluar': typeof AdminStokKeluarRoute
+  '/admin/stok/laporan': typeof AdminStokLaporanRoute
+  '/admin/stok/masuk': typeof AdminStokMasukRoute
+  '/admin/stok/menipis': typeof AdminStokMenipisRoute
+  '/admin/stok/opname': typeof AdminStokOpnameRoute
+  '/admin/stok/penyesuaian': typeof AdminStokPenyesuaianRoute
+  '/admin/stok/semua': typeof AdminStokSemuaRoute
+  '/admin/stok/supplier': typeof AdminStokSupplierRoute
+  '/admin/stok/tambah': typeof AdminStokTambahRoute
+  '/admin/stok': typeof AdminStokIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -132,7 +267,24 @@ export interface FileRoutesById {
   '/admin/produk': typeof AdminProdukRoute
   '/admin/produk-list': typeof AdminProdukListRoute
   '/admin/profil': typeof AdminProfilRoute
+  '/admin/stok': typeof AdminStokRouteWithChildren
   '/admin/': typeof AdminIndexRoute
+  '/admin/stok/aman': typeof AdminStokAmanRoute
+  '/admin/stok/batch': typeof AdminStokBatchRoute
+  '/admin/stok/expired': typeof AdminStokExpiredRoute
+  '/admin/stok/habis': typeof AdminStokHabisRoute
+  '/admin/stok/hampir-expired': typeof AdminStokHampirExpiredRoute
+  '/admin/stok/kategori': typeof AdminStokKategoriRoute
+  '/admin/stok/keluar': typeof AdminStokKeluarRoute
+  '/admin/stok/laporan': typeof AdminStokLaporanRoute
+  '/admin/stok/masuk': typeof AdminStokMasukRoute
+  '/admin/stok/menipis': typeof AdminStokMenipisRoute
+  '/admin/stok/opname': typeof AdminStokOpnameRoute
+  '/admin/stok/penyesuaian': typeof AdminStokPenyesuaianRoute
+  '/admin/stok/semua': typeof AdminStokSemuaRoute
+  '/admin/stok/supplier': typeof AdminStokSupplierRoute
+  '/admin/stok/tambah': typeof AdminStokTambahRoute
+  '/admin/stok/': typeof AdminStokIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -149,7 +301,24 @@ export interface FileRouteTypes {
     | '/admin/produk'
     | '/admin/produk-list'
     | '/admin/profil'
+    | '/admin/stok'
     | '/admin/'
+    | '/admin/stok/aman'
+    | '/admin/stok/batch'
+    | '/admin/stok/expired'
+    | '/admin/stok/habis'
+    | '/admin/stok/hampir-expired'
+    | '/admin/stok/kategori'
+    | '/admin/stok/keluar'
+    | '/admin/stok/laporan'
+    | '/admin/stok/masuk'
+    | '/admin/stok/menipis'
+    | '/admin/stok/opname'
+    | '/admin/stok/penyesuaian'
+    | '/admin/stok/semua'
+    | '/admin/stok/supplier'
+    | '/admin/stok/tambah'
+    | '/admin/stok/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -164,6 +333,22 @@ export interface FileRouteTypes {
     | '/admin/produk-list'
     | '/admin/profil'
     | '/admin'
+    | '/admin/stok/aman'
+    | '/admin/stok/batch'
+    | '/admin/stok/expired'
+    | '/admin/stok/habis'
+    | '/admin/stok/hampir-expired'
+    | '/admin/stok/kategori'
+    | '/admin/stok/keluar'
+    | '/admin/stok/laporan'
+    | '/admin/stok/masuk'
+    | '/admin/stok/menipis'
+    | '/admin/stok/opname'
+    | '/admin/stok/penyesuaian'
+    | '/admin/stok/semua'
+    | '/admin/stok/supplier'
+    | '/admin/stok/tambah'
+    | '/admin/stok'
   id:
     | '__root__'
     | '/'
@@ -178,7 +363,24 @@ export interface FileRouteTypes {
     | '/admin/produk'
     | '/admin/produk-list'
     | '/admin/profil'
+    | '/admin/stok'
     | '/admin/'
+    | '/admin/stok/aman'
+    | '/admin/stok/batch'
+    | '/admin/stok/expired'
+    | '/admin/stok/habis'
+    | '/admin/stok/hampir-expired'
+    | '/admin/stok/kategori'
+    | '/admin/stok/keluar'
+    | '/admin/stok/laporan'
+    | '/admin/stok/masuk'
+    | '/admin/stok/menipis'
+    | '/admin/stok/opname'
+    | '/admin/stok/penyesuaian'
+    | '/admin/stok/semua'
+    | '/admin/stok/supplier'
+    | '/admin/stok/tambah'
+    | '/admin/stok/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -249,6 +451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/stok': {
+      id: '/admin/stok'
+      path: '/stok'
+      fullPath: '/admin/stok'
+      preLoaderRoute: typeof AdminStokRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/profil': {
       id: '/admin/profil'
       path: '/profil'
@@ -284,8 +493,162 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminLayananRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/stok/': {
+      id: '/admin/stok/'
+      path: '/'
+      fullPath: '/admin/stok/'
+      preLoaderRoute: typeof AdminStokIndexRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/tambah': {
+      id: '/admin/stok/tambah'
+      path: '/tambah'
+      fullPath: '/admin/stok/tambah'
+      preLoaderRoute: typeof AdminStokTambahRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/supplier': {
+      id: '/admin/stok/supplier'
+      path: '/supplier'
+      fullPath: '/admin/stok/supplier'
+      preLoaderRoute: typeof AdminStokSupplierRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/semua': {
+      id: '/admin/stok/semua'
+      path: '/semua'
+      fullPath: '/admin/stok/semua'
+      preLoaderRoute: typeof AdminStokSemuaRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/penyesuaian': {
+      id: '/admin/stok/penyesuaian'
+      path: '/penyesuaian'
+      fullPath: '/admin/stok/penyesuaian'
+      preLoaderRoute: typeof AdminStokPenyesuaianRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/opname': {
+      id: '/admin/stok/opname'
+      path: '/opname'
+      fullPath: '/admin/stok/opname'
+      preLoaderRoute: typeof AdminStokOpnameRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/menipis': {
+      id: '/admin/stok/menipis'
+      path: '/menipis'
+      fullPath: '/admin/stok/menipis'
+      preLoaderRoute: typeof AdminStokMenipisRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/masuk': {
+      id: '/admin/stok/masuk'
+      path: '/masuk'
+      fullPath: '/admin/stok/masuk'
+      preLoaderRoute: typeof AdminStokMasukRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/laporan': {
+      id: '/admin/stok/laporan'
+      path: '/laporan'
+      fullPath: '/admin/stok/laporan'
+      preLoaderRoute: typeof AdminStokLaporanRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/keluar': {
+      id: '/admin/stok/keluar'
+      path: '/keluar'
+      fullPath: '/admin/stok/keluar'
+      preLoaderRoute: typeof AdminStokKeluarRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/kategori': {
+      id: '/admin/stok/kategori'
+      path: '/kategori'
+      fullPath: '/admin/stok/kategori'
+      preLoaderRoute: typeof AdminStokKategoriRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/hampir-expired': {
+      id: '/admin/stok/hampir-expired'
+      path: '/hampir-expired'
+      fullPath: '/admin/stok/hampir-expired'
+      preLoaderRoute: typeof AdminStokHampirExpiredRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/habis': {
+      id: '/admin/stok/habis'
+      path: '/habis'
+      fullPath: '/admin/stok/habis'
+      preLoaderRoute: typeof AdminStokHabisRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/expired': {
+      id: '/admin/stok/expired'
+      path: '/expired'
+      fullPath: '/admin/stok/expired'
+      preLoaderRoute: typeof AdminStokExpiredRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/batch': {
+      id: '/admin/stok/batch'
+      path: '/batch'
+      fullPath: '/admin/stok/batch'
+      preLoaderRoute: typeof AdminStokBatchRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
+    '/admin/stok/aman': {
+      id: '/admin/stok/aman'
+      path: '/aman'
+      fullPath: '/admin/stok/aman'
+      preLoaderRoute: typeof AdminStokAmanRouteImport
+      parentRoute: typeof AdminStokRoute
+    }
   }
 }
+
+interface AdminStokRouteChildren {
+  AdminStokAmanRoute: typeof AdminStokAmanRoute
+  AdminStokBatchRoute: typeof AdminStokBatchRoute
+  AdminStokExpiredRoute: typeof AdminStokExpiredRoute
+  AdminStokHabisRoute: typeof AdminStokHabisRoute
+  AdminStokHampirExpiredRoute: typeof AdminStokHampirExpiredRoute
+  AdminStokKategoriRoute: typeof AdminStokKategoriRoute
+  AdminStokKeluarRoute: typeof AdminStokKeluarRoute
+  AdminStokLaporanRoute: typeof AdminStokLaporanRoute
+  AdminStokMasukRoute: typeof AdminStokMasukRoute
+  AdminStokMenipisRoute: typeof AdminStokMenipisRoute
+  AdminStokOpnameRoute: typeof AdminStokOpnameRoute
+  AdminStokPenyesuaianRoute: typeof AdminStokPenyesuaianRoute
+  AdminStokSemuaRoute: typeof AdminStokSemuaRoute
+  AdminStokSupplierRoute: typeof AdminStokSupplierRoute
+  AdminStokTambahRoute: typeof AdminStokTambahRoute
+  AdminStokIndexRoute: typeof AdminStokIndexRoute
+}
+
+const AdminStokRouteChildren: AdminStokRouteChildren = {
+  AdminStokAmanRoute: AdminStokAmanRoute,
+  AdminStokBatchRoute: AdminStokBatchRoute,
+  AdminStokExpiredRoute: AdminStokExpiredRoute,
+  AdminStokHabisRoute: AdminStokHabisRoute,
+  AdminStokHampirExpiredRoute: AdminStokHampirExpiredRoute,
+  AdminStokKategoriRoute: AdminStokKategoriRoute,
+  AdminStokKeluarRoute: AdminStokKeluarRoute,
+  AdminStokLaporanRoute: AdminStokLaporanRoute,
+  AdminStokMasukRoute: AdminStokMasukRoute,
+  AdminStokMenipisRoute: AdminStokMenipisRoute,
+  AdminStokOpnameRoute: AdminStokOpnameRoute,
+  AdminStokPenyesuaianRoute: AdminStokPenyesuaianRoute,
+  AdminStokSemuaRoute: AdminStokSemuaRoute,
+  AdminStokSupplierRoute: AdminStokSupplierRoute,
+  AdminStokTambahRoute: AdminStokTambahRoute,
+  AdminStokIndexRoute: AdminStokIndexRoute,
+}
+
+const AdminStokRouteWithChildren = AdminStokRoute._addFileChildren(
+  AdminStokRouteChildren,
+)
 
 interface AdminRouteChildren {
   AdminLayananRoute: typeof AdminLayananRoute
@@ -293,6 +656,7 @@ interface AdminRouteChildren {
   AdminProdukRoute: typeof AdminProdukRoute
   AdminProdukListRoute: typeof AdminProdukListRoute
   AdminProfilRoute: typeof AdminProfilRoute
+  AdminStokRoute: typeof AdminStokRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -302,6 +666,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminProdukRoute: AdminProdukRoute,
   AdminProdukListRoute: AdminProdukListRoute,
   AdminProfilRoute: AdminProfilRoute,
+  AdminStokRoute: AdminStokRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
 }
 

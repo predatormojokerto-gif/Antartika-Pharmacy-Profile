@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +23,8 @@ function ServicesAdmin() {
   const [showAdd, setShowAdd] = useState(false);
   const [page, setPage] = useState(1);
   const [draft, setDraft] = useState({ title: "", description: "", icon: "Pill", sort_order: 0 });
+  const [savingAction, setSavingAction] = useState<string | null>(null);
+  const savingRef = useRef(false);
   const totalPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
   const pageItems = items.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -34,23 +36,42 @@ function ServicesAdmin() {
   useEffect(() => { load(); }, []);
 
   const add = async () => {
+    if (savingRef.current) return;
     if (!draft.title) return toast.error("Judul wajib diisi");
-    const { error } = await supabase.from("services").insert(draft);
-    if (error) return toast.error(error.message);
-    setDraft({ title: "", description: "", icon: "Pill", sort_order: 0 });
-    setShowAdd(false);
-    toast.success("Ditambahkan");
-    load();
+    savingRef.current = true;
+    setSavingAction("__draft");
+    try {
+      const { error } = await supabase.from("services").insert({
+        ...draft,
+        title: draft.title.trim(),
+      });
+      if (error) return toast.error(error.message);
+      setDraft({ title: "", description: "", icon: "Pill", sort_order: 0 });
+      setShowAdd(false);
+      toast.success("Ditambahkan");
+      load();
+    } finally {
+      savingRef.current = false;
+      setSavingAction(null);
+    }
   };
 
   const save = async (s: Service) => {
-    const { error } = await supabase.from("services").update({
-      title: s.title, description: s.description, icon: s.icon, sort_order: s.sort_order,
-    }).eq("id", s.id);
-    if (error) return toast.error(error.message);
-    toast.success("Tersimpan");
-    setEditingId(null);
-    load();
+    if (savingRef.current) return;
+    savingRef.current = true;
+    setSavingAction(s.id);
+    try {
+      const { error } = await supabase.from("services").update({
+        title: s.title.trim(), description: s.description, icon: s.icon, sort_order: s.sort_order,
+      }).eq("id", s.id);
+      if (error) return toast.error(error.message);
+      toast.success("Tersimpan");
+      setEditingId(null);
+      load();
+    } finally {
+      savingRef.current = false;
+      setSavingAction(null);
+    }
   };
 
   const remove = async (id: string) => {
@@ -85,7 +106,9 @@ function ServicesAdmin() {
             <div className="md:col-span-2"><Label>Deskripsi</Label><Textarea value={draft.description} onChange={(e) => setDraft({ ...draft, description: e.target.value })} /></div>
             <div><Label>Urutan</Label><Input type="number" value={draft.sort_order} onChange={(e) => setDraft({ ...draft, sort_order: Number(e.target.value) })} /></div>
           </div>
-          <Button onClick={add} className="mt-4"><Save className="mr-2 h-4 w-4" /> Simpan</Button>
+          <Button type="button" onClick={add} disabled={savingAction === "__draft"} className="mt-4">
+            <Save className="mr-2 h-4 w-4" /> Simpan
+          </Button>
         </section>
       )}
 
@@ -102,8 +125,8 @@ function ServicesAdmin() {
                   <div><Label>Urutan</Label><Input type="number" value={s.sort_order} onChange={(e) => setItem(s.id, "sort_order", Number(e.target.value))} /></div>
                 </div>
                 <div className="mt-4 flex gap-2">
-                  <Button onClick={() => save(s)} size="sm"><Save className="mr-2 h-4 w-4" /> Simpan</Button>
-                  <Button onClick={() => { setEditingId(null); load(); }} size="sm" variant="outline"><X className="mr-2 h-4 w-4" /> Batal</Button>
+                  <Button type="button" onClick={() => save(s)} disabled={savingAction === s.id} size="sm"><Save className="mr-2 h-4 w-4" /> Simpan</Button>
+                  <Button type="button" onClick={() => { setEditingId(null); load(); }} size="sm" variant="outline"><X className="mr-2 h-4 w-4" /> Batal</Button>
                 </div>
               </div>
             ) : (

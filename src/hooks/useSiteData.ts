@@ -23,6 +23,17 @@ export type SiteSettings = {
 export type Service = { id: string; title: string; description: string; icon: string; sort_order: number };
 export type Category = { id: string; name: string; description: string; sort_order: number; image_url: string | null };
 
+export const FALLBACK_PRODUCT_CATEGORIES = [
+  "Obat Resep",
+  "Obat Bebas",
+  "Vitamin & Suplemen",
+  "Herbal",
+  "Perawatan Bayi",
+  "Personal Care",
+  "Alat Kesehatan",
+  "Kosmetik",
+];
+
 export function useSiteSettings() {
   const [data, setData] = useState<SiteSettings | null>(null);
   useEffect(() => {
@@ -51,4 +62,13 @@ export function useCategories() {
     });
   }, []);
   return data;
+}
+
+export function useProductCategoryNames(extra: string[] = []) {
+  const categories = useCategories();
+  const names = [...categories.map((c) => c.name), ...extra, ...FALLBACK_PRODUCT_CATEGORIES]
+    .map((name) => name.trim())
+    .filter(Boolean);
+
+  return Array.from(new Set(names)).sort((a, b) => a.localeCompare(b, "id"));
 }

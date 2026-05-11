@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,6 +47,7 @@ function Field({ label, value, onChange, textarea }: { label: string; value: str
 function ProfilePage() {
   const [data, setData] = useState<Settings | null>(null);
   const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
 
   useEffect(() => {
     supabase.from("site_settings").select("*").limit(1).maybeSingle().then(({ data }) => {
@@ -57,13 +58,19 @@ function ProfilePage() {
   const update = (k: keyof Settings) => (v: string) => setData((d) => (d ? { ...d, [k]: v } : d));
 
   const save = async () => {
+    if (savingRef.current) return;
     if (!data) return;
+    savingRef.current = true;
     setSaving(true);
-    const { id, ...rest } = data;
-    const { error } = await supabase.from("site_settings").update(rest).eq("id", id);
-    setSaving(false);
-    if (error) toast.error(error.message);
-    else toast.success("Tersimpan");
+    try {
+      const { id, ...rest } = data;
+      const { error } = await supabase.from("site_settings").update(rest).eq("id", id);
+      if (error) toast.error(error.message);
+      else toast.success("Tersimpan");
+    } finally {
+      savingRef.current = false;
+      setSaving(false);
+    }
   };
 
   if (!data) return <p className="text-muted-foreground">Memuat...</p>;
@@ -116,7 +123,7 @@ function ProfilePage() {
       </section>
 
       <div className="mt-6">
-        <Button onClick={save} disabled={saving}>{saving ? "Menyimpan..." : "Simpan Perubahan"}</Button>
+        <Button type="button" onClick={save} disabled={saving}>{saving ? "Menyimpan..." : "Simpan Perubahan"}</Button>
       </div>
     </div>
   );

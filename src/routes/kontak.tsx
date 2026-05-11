@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { useSiteSettings } from "@/hooks/useSiteData";
@@ -20,6 +20,7 @@ function Contact() {
   const s = useSiteSettings();
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [sending, setSending] = useState(false);
+  const sendingRef = useRef(false);
 
   const cards = [
     { icon: MapPin, t: "Alamat", d: s?.address ?? "" },
@@ -30,6 +31,7 @@ function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (sendingRef.current) return;
     const name = form.name.trim();
     const email = form.email.trim();
     const subject = form.subject.trim();
@@ -40,12 +42,17 @@ function Contact() {
     if (subject.length > 200) return toast.error("Subjek terlalu panjang.");
     if (!message || message.length > 2000) return toast.error("Pesan wajib diisi (maks 2000 karakter).");
 
+    sendingRef.current = true;
     setSending(true);
-    const { error } = await supabase.from("messages").insert({ name, email, subject, message });
-    setSending(false);
-    if (error) return toast.error("Gagal mengirim pesan: " + error.message);
-    toast.success("Terima kasih! Pesan Anda telah dikirim.");
-    setForm({ name: "", email: "", subject: "", message: "" });
+    try {
+      const { error } = await supabase.from("messages").insert({ name, email, subject, message });
+      if (error) return toast.error("Gagal mengirim pesan: " + error.message);
+      toast.success("Terima kasih! Pesan Anda telah dikirim.");
+      setForm({ name: "", email: "", subject: "", message: "" });
+    } finally {
+      sendingRef.current = false;
+      setSending(false);
+    }
   };
 
   return (

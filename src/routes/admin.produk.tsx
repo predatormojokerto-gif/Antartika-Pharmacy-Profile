@@ -35,6 +35,8 @@ function CategoriesAdmin() {
   const currentPage = Math.min(page, totalPages);
   const pageItems = items.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const [uploadingId, setUploadingId] = useState<string | null>(null);
+  const [savingAction, setSavingAction] = useState<string | null>(null);
+  const savingRef = useRef(false);
   const draftFileRef = useRef<HTMLInputElement>(null);
 
   const load = async () => {
@@ -44,28 +46,74 @@ function CategoriesAdmin() {
   useEffect(() => { load(); }, []);
 
   const add = async () => {
+    if (savingRef.current) return;
     if (!draft.name) return toast.error("Nama wajib diisi");
-    const { error } = await supabase.from("product_categories").insert(draft);
-    if (error) return toast.error(error.message);
-    setDraft({ name: "", description: "", sort_order: 0, image_url: "" });
-    if (draftFileRef.current) draftFileRef.current.value = "";
-    setShowAdd(false);
-    toast.success("Ditambahkan");
-    load();
+    savingRef.current = true;
+    setSavingAction("__draft");
+    try {
+      const { error } = await supabase.from("product_categories").insert({
+        ...draft,
+        name: draft.name.trim(),
+      });
+      if (error) return toast.error(error.code === "23505" ? "Nama kategori sudah terdaftar." : error.message);
+      setDraft({ name: "", description: "", sort_order: 0, image_url: "" });
+      if (draftFileRef.current) draftFileRef.current.value = "";
+      setShowAdd(false);
+      toast.success("Ditambahkan");
+      load();
+    } finally {
+      savingRef.current = false;
+      setSavingAction(null);
+    }
   };
 
   const save = async (c: Category) => {
-    const { error } = await supabase.from("product_categories").update({
-      name: c.name, description: c.description, sort_order: c.sort_order, image_url: c.image_url,
-    }).eq("id", c.id);
-    if (error) return toast.error(error.message);
-    toast.success("Tersimpan");
-    setEditingId(null);
-    load();
+    if (savingRef.current) return;
+    const cleanName = c.name.trim();
+    if (!cleanName) return toast.error("Nama wajib diisi");
+    savingRef.current = true;
+    setSavingAction(c.id);
+
+    try {
+      const { data: current } = await supabase
+        .from("product_categories")
+        .select("name")
+        .eq("id", c.id)
+        .maybeSingle();
+
+      const { error } = await supabase.from("product_categories").update({
+        name: cleanName, description: c.description, sort_order: c.sort_order, image_url: c.image_url,
+      }).eq("id", c.id);
+      if (error) return toast.error(error.code === "23505" ? "Nama kategori sudah terdaftar." : error.message);
+
+      const oldName = current?.name?.trim();
+      if (oldName && oldName.toLowerCase() !== cleanName.toLowerCase()) {
+        const { error: productError } = await supabase
+          .from("products")
+          .update({ category: cleanName } as any)
+          .eq("category", oldName);
+        if (productError) return toast.error(productError.message);
+      }
+
+      toast.success("Tersimpan");
+      setEditingId(null);
+      load();
+    } finally {
+      savingRef.current = false;
+      setSavingAction(null);
+    }
   };
 
   const remove = async (id: string) => {
-    if (!confirm("Hapus kategori ini?")) return;
+    const category = items.find((item) => item.id === id);
+    if (!confirm("Hapus kategori ini? Produk yang memakai kategori ini akan dikosongkan kategorinya.")) return;
+    if (category?.name) {
+      const { error: productError } = await supabase
+        .from("products")
+        .update({ category: "" } as any)
+        .eq("category", category.name);
+      if (productError) return toast.error(productError.message);
+    }
     const { error } = await supabase.from("product_categories").delete().eq("id", id);
     if (error) toast.error(error.message);
     else { toast.success("Dihapus"); load(); }
@@ -133,7 +181,10 @@ function CategoriesAdmin() {
               </div>
             </div>
           </div>
-          <Button onClick={add} className="mt-4"><Save className="mr-2 h-4 w-4" /> Simpan</Button>
+          <Button type="button" onClick={add} disabled={savingAction === "__draft"} className="mt-4">
+            {savingAction === "__draft" ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+            Simpan
+          </Button>
         </section>
       )}
 
@@ -161,8 +212,11 @@ function CategoriesAdmin() {
                   </div>
                 </div>
                 <div className="mt-4 flex gap-2">
-                  <Button onClick={() => save(c)} size="sm"><Save className="mr-2 h-4 w-4" /> Simpan</Button>
-                  <Button onClick={() => { setEditingId(null); load(); }} size="sm" variant="outline"><X className="mr-2 h-4 w-4" /> Batal</Button>
+                  <Button type="button" onClick={() => save(c)} disabled={savingAction === c.id} size="sm">
+                    {savingAction === c.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                    Simpan
+                  </Button>
+                  <Button type="button" onClick={() => { setEditingId(null); load(); }} size="sm" variant="outline"><X className="mr-2 h-4 w-4" /> Batal</Button>
                 </div>
               </div>
             ) : (
